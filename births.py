@@ -70,21 +70,11 @@ pca = decomposition.PCA(0.95)
 principalComponents = pca.fit_transform(x)
 x_train_pca = pca.fit_transform(x_train)
 x_test_pca = pca.fit_transform(x_test)
-#print(pca.explained_variance_ratio_)
-#print(pca.n_components_)
 print(pandas_data.shape)
-print(x_train_pca.shape)
-print(x_test_pca.shape)
-reg = LogisticRegression().fit(x_train_pca, y_train)
-print(reg.score(x, y))
-# Uczenie klasyfikatora regresji logistycznej
-#lr_model = train_logistic_regression(solver='lbfgs', max_iter=100, multi_class='multinomial',
-#                                     x_train=x_train_pca, y_train=y_train,
-#                                     x_test=x_test_pca, y_test=y_test)
-#forest = train_random_forest(seed=0, n_estimators=50, max_leaf_nodes=15, n_jobs=-1,
-#                             x_train=x_train_pca, y_train=y_train,
-#                             x_test=x_test_pca, y_test=y_test)
 
-#correlation_matrix = pandas_data.corr()
-#seaborn.heatmap(correlation_matrix, annot=True)
-#plt.show()
+# Uczenie klasyfikatora regresji logistycznej
+lr_model = train_logistic_regression(solver='lbfgs', max_iter=100, multi_class='multinomial',
+                                     x_train=x_train_pca, y_train=y_train,
+                                     x_test=x_test_pca, y_test=y_test)
+
+# MemoryError: Unable to allocate 87.9 GiB for an array with shape (2280920, 5170) and data type int64
