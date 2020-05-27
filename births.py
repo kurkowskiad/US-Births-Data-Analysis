@@ -5,8 +5,7 @@ import seaborn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import decomposition
-
+from sklearn import decomposition, preprocessing
 
 def train_logistic_regression(solver, max_iter, multi_class,
                               x_train, y_train,
@@ -17,7 +16,6 @@ def train_logistic_regression(solver, max_iter, multi_class,
     model = LogisticRegression(solver=solver,
                                max_iter=max_iter,
                                multi_class=multi_class)
-    print(x_train.shape, y_train.shape)
     model.fit(x_train, y_train)
     lr_train_accuracy = model.score(x_train, y_train)
     lr_test_accuracy = model.score(x_test, y_test)
@@ -26,14 +24,13 @@ def train_logistic_regression(solver, max_iter, multi_class,
     return model
 
 
-def train_random_forest(seed, n_estimators, max_leaf_nodes, n_jobs,
+def train_random_forest(n_estimators, max_leaf_nodes, n_jobs,
                         x_train, y_train,
                         x_test, y_test):
     """Uczenie klasyfikatora lasu losowego,
     porównanie otrzymanej dokładności na zbiorze treningowym i testowym"""
 
-    forest = RandomForestClassifier(random_state=seed,
-                                    n_estimators=n_estimators,
+    forest = RandomForestClassifier(n_estimators=n_estimators,
                                     max_leaf_nodes=max_leaf_nodes,
                                     n_jobs=n_jobs).fit(x_train,
                                                        y_train)
@@ -59,22 +56,24 @@ pandas_data.loc[pandas_data['SEX'] == 'M', 'SEX'] = 0
 pandas_data.loc[pandas_data['SEX'] == 'F', 'SEX'] = 1
 pandas_data = pandas_data.replace(r'^\s*$', 0, regex=True)
 pandas_data = pandas_data.astype(dtypes)
-x1 = pandas_data.iloc[:, 0:3]
-x2 = pandas_data.iloc[:, 4:]
+x1 = pandas_data.iloc[:, 0:15]
+x2 = pandas_data.iloc[:, 16]
 x = pandas.concat((x1, x2), axis=1)
-y = pandas_data.iloc[:, 3]
+y = pandas_data.iloc[:, 15]
 # Podzielenie zbioru danych na zbiór treningowy i testowy 60/40.
 x_train, x_test, y_train, y_test = train_test_split(x, y,
-                                                    test_size=0.4)
+                                                    test_size=0.3)
 pca = decomposition.PCA(0.95)
 principalComponents = pca.fit_transform(x)
 x_train_pca = pca.fit_transform(x_train)
 x_test_pca = pca.fit_transform(x_test)
-print(pandas_data.shape)
 
 # Uczenie klasyfikatora regresji logistycznej
-lr_model = train_logistic_regression(solver='lbfgs', max_iter=100, multi_class='multinomial',
-                                     x_train=x_train_pca, y_train=y_train,
-                                     x_test=x_test_pca, y_test=y_test)
+lr_model = train_logistic_regression(solver='lbfgs', max_iter=5000, multi_class='multinomial',
+                                     x_train=x_train, y_train=y_train,
+                                    x_test=x_test, y_test=y_test)
+#forest = train_random_forest(n_estimators=30, max_leaf_nodes=10, n_jobs=-1,
+#                             x_train=x_train, y_train=y_train,
+#                             x_test=x_test, y_test=y_test)
 
 # MemoryError: Unable to allocate 87.9 GiB for an array with shape (2280920, 5170) and data type int64
