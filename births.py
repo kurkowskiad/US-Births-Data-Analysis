@@ -63,15 +63,16 @@ y = pandas_data.iloc[:, 15]
 # Podzielenie zbioru danych na zbiór treningowy i testowy 60/40.
 x_train, x_test, y_train, y_test = train_test_split(x, y,
                                                     test_size=0.3)
-pca = decomposition.PCA(0.95)
-principalComponents = pca.fit_transform(x)
-x_train_pca = pca.fit_transform(x_train)
-x_test_pca = pca.fit_transform(x_test)
+# pca = decomposition.PCA(0.95)
+# principalComponents = pca.fit_transform(x)
+# x_train_pca = pca.fit_transform(x_train)
+# x_test_pca = pca.fit_transform(x_test)
 
+#print(pandas_data.loc[(pandas_data['DMAR'] == 0)])
 # Uczenie klasyfikatora regresji logistycznej
-lr_model = train_logistic_regression(solver='lbfgs', max_iter=5000, multi_class='multinomial',
-                                     x_train=x_train, y_train=y_train,
-                                    x_test=x_test, y_test=y_test)
+# lr_model = train_logistic_regression(solver='lbfgs', max_iter=5000, multi_class='multinomial',
+#                                      x_train=x_train, y_train=y_train,
+#                                     x_test=x_test, y_test=y_test)
 #forest = train_random_forest(n_estimators=30, max_leaf_nodes=10, n_jobs=-1,
 #                             x_train=x_train, y_train=y_train,
 #                             x_test=x_test, y_test=y_test)
